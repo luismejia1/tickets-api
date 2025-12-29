@@ -12,16 +12,35 @@ class Role(Enum):
     CUSTOMER = 'customer'
 
 
-class User(SQLModel, table=True):
+class UserBase(SQLModel):
+    first_name: str
+    last_name: str
+    role: Role = Field(default=Role.CUSTOMER)
+    email: str = Field(unique=True, index=True)
+    is_active: bool = Field(default=True)
+
+
+class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    first_name: str = Field(default=None)
-    last_name: str = Field(default=None)
-    role: Role = Field(
-        sa_column=SAEnum(Role, name="role_enum")
-    )
-    email: str = Field(default=None, unique=True)
+    password: str = Field(nullable=False)
     created_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
         default_factory=get_utc_now,
     )
-    is_active: bool = Field(default=True)
+
+
+class UserPublic(UserBase):
+    id: int
+    created_at: datetime
+
+
+class UserCreate(UserBase):
+    pass
+
+
+class UserUpdate(SQLModel):
+    first_name: str | None = None
+    last_name: str | None = None
+    email: str | None = None
+    role: Role | None = None
+    is_active: bool | None = None

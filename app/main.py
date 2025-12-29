@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from .routers import users
 from .settings import settings
 from contextlib import asynccontextmanager
-from .database.database import create_db_and_tables
+from .database.session import create_db_and_tables
 
 
 @asynccontextmanager

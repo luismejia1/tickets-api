@@ -1,9 +1,10 @@
 
 from ..models.user import User
 from sqlmodel import create_engine, SQLModel, Session
-from ..settings import settings
-from typing import Annotated
 from fastapi import Depends
+from typing import Annotated
+from ..settings import settings
+
 
 DATABASE_URL = settings.database_url
 
