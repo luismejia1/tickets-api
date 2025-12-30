@@ -1,5 +1,6 @@
 
 from ..models.user import User
+from ..models.ticket import Ticket, TicketHistory
 from sqlmodel import create_engine, SQLModel, Session
 from fastapi import Depends
 from typing import Annotated
