@@ -15,8 +15,8 @@ def create_access_token(subject: str, role: str, expires_delta: Optional[timedel
 
     to_encode = {
         "sub": str(subject),
-        "exp": expire,
-        "iat": utc,
+        "exp": int(expire.timestamp()),
+        "iat": int(utc.timestamp()),
         "role": role
     }
 
