@@ -4,7 +4,7 @@ from ..models.ticket import Ticket, TicketHistory
 from sqlmodel import create_engine, SQLModel, Session
 from fastapi import Depends
 from typing import Annotated
-from ..settings import settings
+from app.core.config import settings
 
 
 DATABASE_URL = settings.database_url

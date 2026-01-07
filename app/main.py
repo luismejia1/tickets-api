@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
-from .routers import users
-from .settings import settings
+from .routers import users, auth
+from .core.config import settings
 from contextlib import asynccontextmanager
 from .database.session import create_db_and_tables
 
@@ -10,9 +10,11 @@ async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, title=settings.api_name,
+              openapi_url=f"{settings.api_version}/openapi.json")
 
-app.include_router(users.router)
+app.include_router(users.router, prefix=settings.api_version)
+app.include_router(auth.router, prefix=settings.api_version)
 
 
 @app.get("/")
@@ -25,5 +27,4 @@ async def info():
     return {
         "app_name": settings.api_name,
         "dev_email": settings.dev_email,
-        "database": settings.database_url
     }

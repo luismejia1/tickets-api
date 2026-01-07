@@ -4,6 +4,7 @@ from enum import Enum
 from datetime import datetime, timezone
 from ..utils import get_utc_now
 from sqlalchemy import func
+from pydantic import EmailStr
 
 
 class Role(Enum):
@@ -16,13 +17,13 @@ class UserBase(SQLModel):
     first_name: str
     last_name: str
     role: Role = Field(default=Role.CUSTOMER)
-    email: str = Field(unique=True, index=True)
+    email: EmailStr = Field(unique=True, index=True)
     is_active: bool = Field(default=True)
 
 
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    password: str = Field(nullable=False)
+    hashed_password: str = Field(nullable=False)
     created_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now()),
         default_factory=get_utc_now,
@@ -31,11 +32,10 @@ class User(UserBase, table=True):
 
 class UserPublic(UserBase):
     id: int
-    created_at: datetime
 
 
 class UserCreate(UserBase):
-    pass
+    password: str
 
 
 class UserUpdate(SQLModel):
